@@ -11,12 +11,12 @@ mongose.Promise=global.Promise;
 // Load WebRouter
 const webRouter = require('./modules/routes/web');
 const apiRouter = require('./modules/routes/api/index');
-const { mongo } = require('mongoose');
-new userModel({
-    name:'Farzad Qader'
-}).save((err)=>{
-    if(err) throw new Error(err);
-});
+
+// new userModel({
+//     name:'Farzad Qader'
+// }).save((err)=>{
+//     if(err) throw new Error(err);
+// });
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json({type:'application/json'}));
 app.use('/',webRouter);
