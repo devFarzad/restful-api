@@ -9,7 +9,7 @@ mongose.connect('mongodb://127.0.0.1:27017/apiLearn');
 mongose.Promise=global.Promise;
 
 // Load WebRouter
-const webRouter = require('./modules/routes/web');
+const webRouter = require('./modules/routes/web/web');
 const apiRouter = require('./modules/routes/api/index');
 
 // new userModel({

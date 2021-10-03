@@ -1,50 +1,27 @@
 const express = require('express');
 const router = express.Router();
+const {api:ControllerAPI}=config.path.controllers;
+// const {web:ControllerWeb}=config.path.controllers;
+//model
 const Course = require('../../models/Course');
-router.get('/', (req, res) => {
-    res.json('Welcome To API');
-});
+const homeController = require(`../../controllers/api/V1/HomeController`);
+const courseController = require(`../../controllers/api/V1/CourseController`);
+const adminCourseController = require('../../controllers/api/V1/admin/CourseController');
+const HomeController = require('../../controllers/api/V1/HomeController');
+
+router.get('/',HomeController.index);
+router.get('/version',HomeController.version);
+// console.log('API PATH ');
+// console.log(ControllerAPI);
+//Controllers//
+
+// console.log(homeController);
+
 const adminRouter = express.Router();
-adminRouter.get('/courses', (req, res) => {
-    let course = Course.find({}, (err, courses) => {
-        if (err) throw new Error(err);
-        if (courses) {
-            return res.json(courses);
-
-        }else if(courses ==[]){
-            return res.json('Not Found any Course !');
-        }
-    });
-
-});
-adminRouter.post('/courses', (req, res) => {
-    //Validation
-
-    // Create Course 
-    let newCourse = new Course({
-        title:req.body.title,
-        body:req.body.body,
-        price:req.body.price,
-        image:req.body.image,
-    }).save((err)=>{
-        if(err) throw new Error(err);
-        res.json('Create Course');
-    });
-
-});
-adminRouter.put('/courses/:id', (req, res) => {
-      Course.findByIdAndUpdate(req.params.id,{title:'COURSE SIX'},(err,course)=>{
-        if(err) throw new Error(err);
-        if(course) res.json('ok');
-      });
-
-});
-adminRouter.delete('/courses/:id', (req, res) => {
-    Course.findByIdAndRemove(req.params.id,(err,course)=>{
-        if(err) throw new Error(err);
-        if(course) res.json('Success Deleted !');
-    })
-});
+adminRouter.get('/courses', adminCourseController.index.bind(adminCourseController));
+adminRouter.post('/courses', adminCourseController.store);
+adminRouter.put('/courses/:id',adminCourseController.update);
+adminRouter.delete('/courses/:id', adminCourseController.delete);
 router.use('/admin', adminRouter);
 // router.get('/courses',(req,res)=>{
 // res.json({
