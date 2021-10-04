@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {api:ControllerAPI}=config.path.controllers;
+const { check } = require('express-validator');
+
 // const {web:ControllerWeb}=config.path.controllers;
 //model
 const Course = require('../../models/Course');
@@ -9,6 +11,8 @@ const courseController = require(`../../controllers/api/V1/CourseController`);
 const adminCourseController = require('../../controllers/api/V1/admin/CourseController');
 const HomeController = require('../../controllers/api/V1/HomeController');
 
+//validator
+const CourseValidator = require('../../validator/courseValidator');
 router.get('/',HomeController.index);
 router.get('/version',HomeController.version);
 // console.log('API PATH ');
@@ -19,9 +23,16 @@ router.get('/version',HomeController.version);
 
 const adminRouter = express.Router();
 adminRouter.get('/courses', adminCourseController.index.bind(adminCourseController));
-adminRouter.post('/courses', adminCourseController.store);
-adminRouter.put('/courses/:id',adminCourseController.update);
-adminRouter.delete('/courses/:id', adminCourseController.delete);
+adminRouter.post('/courses',
+CourseValidator.handle(),
+
+ adminCourseController.store.bind(adminCourseController));
+adminRouter.put('/courses/:id',
+check('id').isMongoId().withMessage('Id invalid !'),
+adminCourseController.update.bind(adminCourseController));
+adminRouter.delete('/courses/:id',
+check('id').isMongoId().withMessage('Id invalid !'),//check ID
+adminCourseController.delete.bind(adminCourseController));
 router.use('/admin', adminRouter);
 // router.get('/courses',(req,res)=>{
 // res.json({
