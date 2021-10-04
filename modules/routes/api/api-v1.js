@@ -13,14 +13,12 @@ const HomeController = require('../../controllers/api/V1/HomeController');
 
 //validator
 const CourseValidator = require('../../validator/courseValidator');
+
+
 router.get('/',HomeController.index);
 router.get('/version',HomeController.version);
-// console.log('API PATH ');
-// console.log(ControllerAPI);
-//Controllers//
-
-// console.log(homeController);
-
+ router.get('/courses',courseController.index.bind(courseController))
+//admin Router
 const adminRouter = express.Router();
 adminRouter.get('/courses', adminCourseController.index.bind(adminCourseController));
 adminRouter.post('/courses',

@@ -42,7 +42,7 @@ module.exports = class Controller {
                 res.status(422).json({
                     message: errors.array().map(err => {
                         return {
-                            'feild': err.param,
+                            'field': err.param,
                             'message': err.msg
                         }
                     })
