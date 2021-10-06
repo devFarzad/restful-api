@@ -1,13 +1,14 @@
 const Course = require('../../models/Course');
 const Lesson = require('../../models/Lessons');
-const { validationResult, check ,body} = require('express-validator');
+const User = require('../../models/User');
+const { validationResult, check, body } = require('express-validator');
 
 const isMongoId = require('validator/lib/isMongoId');
 
 module.exports = class Controller {
     constructor() {
-        this.model = { Course ,Lesson};
-      
+        this.model = { Course, Lesson, User };
+
     }
     // showValidationErrors(req, res,) {
     //     let errors = req.validationErrors();
@@ -51,28 +52,28 @@ module.exports = class Controller {
                         }
                     })
                 });
-               reject();
+                reject();
             }
             resolve();
 
         });
     }
-    scapeAndTrim(items){
+    scapeAndTrim(items) {
         items.split(' ').forEach(item => {
-          let Escap= body(item).escape();
-          let ESC2= body(item).trim();
-           console.log(ESC2);
+            let Escap = body(item).escape();
+            let ESC2 = body(item).trim();
+            console.log(ESC2);
         });
     }
-    isMongoId(res,paramId){
-        console.log('check MongoId',paramId);
+    isMongoId(res, paramId) {
+        console.log('check MongoId', paramId);
         if (!isMongoId(paramId)) {
-            console.log('check MongoId',paramId);
+            console.log('check MongoId', paramId);
 
-        return  res.json({
-             message:' Id Invalid',
-             success:false
-         })
+            return res.json({
+                message: ' Id Invalid',
+                success: false
+            })
         }
 
     }
