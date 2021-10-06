@@ -1,9 +1,13 @@
 const Course = require('../../models/Course');
-const { validationResult } = require('express-validator');
+const Lesson = require('../../models/Lessons');
+const { validationResult, check ,body} = require('express-validator');
+
+const isMongoId = require('validator/lib/isMongoId');
 
 module.exports = class Controller {
     constructor() {
-        this.model = { Course };
+        this.model = { Course ,Lesson};
+      
     }
     // showValidationErrors(req, res,) {
     //     let errors = req.validationErrors();
@@ -52,5 +56,24 @@ module.exports = class Controller {
             resolve();
 
         });
+    }
+    scapeAndTrim(items){
+        items.split(' ').forEach(item => {
+          let Escap= body(item).escape();
+          let ESC2= body(item).trim();
+           console.log(ESC2);
+        });
+    }
+    isMongoId(res,paramId){
+        console.log('check MongoId',paramId);
+        if (!isMongoId(paramId)) {
+            console.log('check MongoId',paramId);
+
+        return  res.json({
+             message:' Id Invalid',
+             success:false
+         })
+        }
+
     }
 }

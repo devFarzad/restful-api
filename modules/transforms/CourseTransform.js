@@ -5,7 +5,7 @@ module.exports = class CourseTransform extends Transform{
         return {
             'title':item.title,
             'body':item.body,
-            'price':item.price
+            // 'price':item.price
            }
     }
 }

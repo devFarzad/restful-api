@@ -1,7 +1,10 @@
 
 const { body } = require('express-validator');
+const Course = require('../../../../models/Course');
 
 const Controller = require('./../../Controller');
+const CourseTransform = require('../../../../transforms/CourseTransform')
+
 class CourseController extends Controller {
     index(req, res) {
         // console.log(this);
@@ -16,7 +19,20 @@ class CourseController extends Controller {
         });
 
     }
+    single(req, res, nex) {
+        try {
+            Course.findById({ _id: req.params.id }, (err, course) => {
+                if (!course) return res.json({ message: 'Not Found Course', success: false })
+                return res.json({
+                    message: new CourseTransform().transform(course),
+                    success:true
+                })
+            });
 
+        } catch (err) {
+
+        }
+    }
     store(req, res) {
         this.showValidationErrors(req, res).then(() => {
             // Create Course 
