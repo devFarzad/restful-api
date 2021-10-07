@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
     port : 8080,
+    secret:'FERBONApiDaTaCooodE',
     path : {
         controllers : { 
             api : path.resolve('../modules/controllers/api'),

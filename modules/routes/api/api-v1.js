@@ -6,12 +6,14 @@ const { check, body } = require('express-validator');
 // const {web:ControllerWeb}=config.path.controllers;
 //model
 const Course = require('../../models/Course');
-
+//middleware
+const ApiAuth = require('../../middleware/apiAuth');
 //Controller
 
 const courseController = require(`../../controllers/api/V1/CourseController`);
 const HomeController = require('../../controllers/api/V1/HomeController');
 const AuthController = require('../../controllers/api/V1/AuthController')
+const UserController = require('../../controllers/api/V1/UserController')
 //Admin Controller
 const adminLessonController = require('../../controllers/api/V1/admin/LessonController');
 const adminCourseController = require('../../controllers/api/V1/admin/CourseController');
@@ -19,18 +21,22 @@ const adminCourseController = require('../../controllers/api/V1/admin/CourseCont
 const CourseValidator = require('../../validator/courseValidator');
 const LessonsValidator = require('../../validator/lessonValidator');
 const RegisterValidator = require('../../validator/registerValidator');
+const LoginValidator = require('../../validator/loginValidator');
 
 
 router.get('/', HomeController.index);
 router.get('/version', HomeController.version);
 router.get('/courses', courseController.index.bind(courseController))
 //auth
-router.get('/login', AuthController.login.bind(AuthController));
-router.get('/register',
+router.post('/login',  body('email').escape().trim(),LoginValidator.handle(), AuthController.login.bind(AuthController));
+router.post('/register',
     body('name').escape().trim(),
     body('password').escape().trim(),
     body('email').escape().trim(),
     RegisterValidator.handle(), AuthController.register.bind(AuthController));
+router.get('/user',ApiAuth.handle.bind(ApiAuth),UserController.index.bind(UserController));
+
+
 
 //admin Router
 const adminRouter = express.Router();
