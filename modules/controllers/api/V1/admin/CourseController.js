@@ -3,7 +3,7 @@ const { body } = require('express-validator');
 const Course = require('../../../../models/Course');
 
 const Controller = require('./../../Controller');
-const CourseTransform = require('../../../../transforms/CourseTransform')
+const CourseTransform = require('../../../../transforms/V1/CourseTransform')
 
 class CourseController extends Controller {
     index(req, res) {

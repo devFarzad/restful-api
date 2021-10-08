@@ -8,6 +8,7 @@ const { check, body } = require('express-validator');
 const Course = require('../../models/Course');
 //middleware
 const ApiAuth = require('../../middleware/apiAuth');
+const {uploadImage} = require('../../middleware/uploadMiddleware');
 //Controller
 
 const courseController = require(`../../controllers/api/V1/CourseController`);
@@ -24,6 +25,7 @@ const RegisterValidator = require('../../validator/registerValidator');
 const LoginValidator = require('../../validator/loginValidator');
 
 
+
 router.get('/', HomeController.index);
 router.get('/version', HomeController.version);
 router.get('/courses', courseController.index.bind(courseController))
@@ -35,7 +37,7 @@ router.post('/register',
     body('email').escape().trim(),
     RegisterValidator.handle(), AuthController.register.bind(AuthController));
 router.get('/user',ApiAuth.handle.bind(ApiAuth),UserController.index.bind(UserController));
-
+router.post('/user/image',ApiAuth.handle.bind(ApiAuth),uploadImage.single('image'),UserController.uploadImege.bind(UserController))
 
 
 //admin Router

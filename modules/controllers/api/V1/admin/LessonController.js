@@ -1,6 +1,6 @@
 const { json } = require('body-parser');
 const Controller = require('../../Controller');
-const CourseTransform = require('../../../../transforms/CourseTransform');
+const CourseTransform = require('../../../../transforms/V1/CourseTransform');
 const { restart } = require('nodemon');
 
 // const path =require('path');

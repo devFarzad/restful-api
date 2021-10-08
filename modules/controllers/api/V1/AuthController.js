@@ -1,5 +1,5 @@
 const Controller = require("../Controller")
-const userTransform =require('../../../transforms/UserTransform');
+const userTransform =require('../../../transforms/V1/UserTransform');
 const bcrypt = require('bcrypt');
 module.exports = new class AuthController extends Controller {
     async login(req, res, next) {

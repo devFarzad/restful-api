@@ -26,7 +26,7 @@ app.use(bodyParser.json({type:'application/json'}));
 app.use(express.json());
 app.use(body());
 app.use(check());
-
+app.use(express.static('/public'));
 app.use('/',webRouter);
 app.use('/api',apiRouter);
 app.listen(config.port,()=>{

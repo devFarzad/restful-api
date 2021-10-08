@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 module.exports = class UserTransform extends Transform {
     transform(item, createToken = false) {
         this.createToken = createToken;
+       
         return {
             'name': item.name,
             'email': item.email,
@@ -13,6 +14,7 @@ module.exports = class UserTransform extends Transform {
     }
     withTokern(item) {
         if (item.token) {
+          
             return { token: item.token }
         }
         if (this.createToken) {

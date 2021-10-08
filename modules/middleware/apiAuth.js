@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Middleware = require("./middleware");
 const User =require('../models/User');
-const UserTransform = require("../transforms/UserTransform");
+const UserTransform = require("../transforms/V1/UserTransform");
 class ApiAuth extends Middleware{
     handle(req, res, next) {
         let token =req.body.token || req.query.token || req.headers['x-access-token'];

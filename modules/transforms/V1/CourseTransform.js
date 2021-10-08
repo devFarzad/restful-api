@@ -1,4 +1,4 @@
-const Transform = require('../transforms/Transform');
+const Transform = require('./Transform');
 
 module.exports = class CourseTransform extends Transform{
     transform(item){
