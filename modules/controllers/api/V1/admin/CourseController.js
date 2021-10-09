@@ -8,15 +8,27 @@ const CourseTransform = require('../../../../transforms/V1/CourseTransform')
 class CourseController extends Controller {
     index(req, res) {
         // console.log(this);
-        let course = this.model.Course.find({}, (err, courses) => {
-            if (err) throw new Error(err);
-            if (courses) {
-                return res.json(courses);
+        // let course = this.model.Course.find({}, (err, courses) => {
+        //     if (err) throw new Error(err);
+        //     if (courses) {
+        //         return res.json(courses);
 
-            } else if (courses == []) {
-                return res.json('Not Found any Course !');
-            }
-        });
+        //     } else if (courses == []) {
+        //         return res.json('Not Found any Course !');
+        //     }
+        // });
+
+        let course = this.model.Course.find({}).populate('lessons').exec((err, courses)=>{
+            if (err) throw new Error(err);
+                if (courses) {
+                    return res.json({
+                        data: new CourseTransform().withLessons().transformCollaction(courses),
+                        success:true
+                    });
+    
+                } else if (courses == []) {
+                    return res.json('Not Found any Course !');
+                }});
 
     }
     single(req, res, nex) {
@@ -37,12 +49,16 @@ class CourseController extends Controller {
         this.showValidationErrors(req, res).then(() => {
             // Create Course 
             let newCourse = this.model.Course({
+                user:req.user.id,
                 title: req.body.title,
                 body: req.body.body,
                 price: req.body.price,
                 image: req.body.image,
-            }).save((err) => {
+            });
+            newCourse.save((err) => {
                 if (err) throw new Error(err);
+                req.user.courses.push(newCourse._id);
+                req.user.save();
                 res.json('Create Course');
             });
 

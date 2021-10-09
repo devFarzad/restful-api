@@ -14,6 +14,7 @@ const {uploadImage} = require('../../middleware/uploadMiddleware');
 const courseController = require(`../../controllers/api/V1/CourseController`);
 const HomeController = require('../../controllers/api/V1/HomeController');
 const AuthController = require('../../controllers/api/V1/AuthController')
+const LessonController = require('../../controllers/api/V1/LessonsController')
 const UserController = require('../../controllers/api/V1/UserController')
 //Admin Controller
 const adminLessonController = require('../../controllers/api/V1/admin/LessonController');
@@ -39,12 +40,19 @@ router.post('/register',
 router.get('/user',ApiAuth.handle.bind(ApiAuth),UserController.index.bind(UserController));
 router.post('/user/image',ApiAuth.handle.bind(ApiAuth),uploadImage.single('image'),UserController.uploadImege.bind(UserController))
 
+//Lessons Controller \
+// router.get('/lessons', LessonController.single.bind(LessonController))
+router.get('/lessons/:id',
+check('id').isMongoId().withMessage('Id invalid !'),
+ LessonController.single.bind(LessonController));
 
+
+//Admin
 //admin Router
 const adminRouter = express.Router();
-adminRouter.get('/courses', adminCourseController.index.bind(adminCourseController));
+adminRouter.get('/courses', ApiAuth.handle.bind(ApiAuth),adminCourseController.index.bind(adminCourseController));
 adminRouter.get('/courses/:id', adminCourseController.single.bind(adminCourseController));
-adminRouter.post('/courses', CourseValidator.handle(), adminCourseController.store.bind(adminCourseController));
+adminRouter.post('/courses', ApiAuth.handle.bind(ApiAuth),CourseValidator.handle(), adminCourseController.store.bind(adminCourseController));
 adminRouter.put('/courses/:id', check('id').isMongoId().withMessage('Id invalid !'), adminCourseController.update.bind(adminCourseController));
 adminRouter.delete('/courses/:id', check('id').isMongoId().withMessage('Id invalid !'), adminCourseController.delete.bind(adminCourseController));
 
