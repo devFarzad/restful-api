@@ -1,29 +1,32 @@
 const mongose = require('mongoose');
-const Schema=mongose.Schema;
+const Schema = mongose.Schema;
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
+
+var mongoosePaginate = require('mongoose-paginate');
 
 const UserSchema = new Schema({
- name:{type:String,required:true},
- email:{type:String,required:true,unique:true},
- password:{type:String,required:true},
- courses:[{type:Schema.Types.ObjectId,ref:'Course'}]
-},{timestamps:true});
-UserSchema.pre('save',function(next){
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    isAdmin:{type:Boolean,default:false},
+    courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
+}, { timestamps: true });
+UserSchema.pre('save', function (next) {
     //decrypt pass
-    
-        bcrypt.hash(this.password, 10, (err, hash) =>{
-            // Store hash in your password DB.
-            this.password = hash;
-            // console.log(this);
-            next();
-        });
-        // console.log(this.password);
-   
-  
+
+    bcrypt.hash(this.password, 10, (err, hash) => {
+        // Store hash in your password DB.
+        this.password = hash;
+        // console.log(this);
+        next();
+    });
+    // console.log(this.password);
+
+
 });
 // UserSchema.methods.comparePassword = function(password) {
 //     return bcrypt.compareSync(password, this.password);
 // }
-module.exports= mongose.model('User',UserSchema);
+UserSchema.plugin(mongoosePaginate);
+
+module.exports = mongose.model('User', UserSchema);

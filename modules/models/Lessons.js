@@ -1,5 +1,7 @@
 const mongose = require('mongoose');
 const Schema=mongose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
+
 const LessonSchema = new Schema({
  course:{type:Schema.Types.ObjectId,ref:'Course'},
  title:{type:String,required:true},
@@ -11,4 +13,6 @@ const LessonSchema = new Schema({
  viewComment:{type:Number,default:0},
  
 },{timestamps:true});
+LessonSchema.plugin(mongoosePaginate);
+
 module.exports= mongose.model('Lesson',LessonSchema);

@@ -1,5 +1,6 @@
 const Transform = require('./Transform');
 module.exports = class CourseTransform extends Transform {
+    //Overide
     transform(item) {
         return {
             'title': item.title,
@@ -11,6 +12,10 @@ module.exports = class CourseTransform extends Transform {
     withLessons() {
         this.withLessonsStaus = true
         return this;
+    }
+    //Overide
+    CollactionName(){
+        return 'Courses';
     }
     showLessons(item) {
         const LessonsTransform = require('./LessonsTransform');

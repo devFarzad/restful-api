@@ -2,6 +2,7 @@ const { json } = require('body-parser');
 const Controller = require('../../Controller');
 const CourseTransform = require('../../../../transforms/V1/CourseTransform');
 const { restart } = require('nodemon');
+const LessonsTransform = require('../../../../transforms/V1/LessonsTransform');
 
 // const path =require('path');
 
@@ -10,22 +11,19 @@ const { restart } = require('nodemon');
 class LessonController extends Controller {
     async index(req, res, next) {
         try {
+           let  page = req.query.page || 1;
+          this.model.Lesson.paginate({}, { page:page, limit: 2 }).then(result => {
 
-            let lessons = await this.model.Lesson.find({}, (err, lessons) => {
-                if (err) res.json({
-                    data: `Error Lesson : ${err}`,
-                    success: false
-                });
-                if (!lessons) res.json({
+                if (!result) res.json({
                     data: 'Not Exist any Lessons',
                     success: false
                 });
                 return res.json({
-                    data: new CourseTransform().transformCollaction(lessons),
+                    data: new LessonsTransform().withPaginate().transformCollaction(result),
                     success: true
                 })
-            });
-            return res.json(lessons);
+            }).then(err => console.log(err));
+            // return res.json(lessons);
         } catch (err) {
             next(err);
         }
@@ -75,26 +73,26 @@ class LessonController extends Controller {
     }
     async delete(req, res, next) {
         try {
-            this.showValidationErrors(req,res).then(data=>{
-                this.model.Lesson.findById(req.params.id).populate('course').exec((err,lesson)=>{
-                    if(err) return res.json({data:'Have Error' , success:false});
-                    if(lesson) {
-                        let course=lesson.course;
-                      let pos=  course.lessons.indexOf(lesson._id)
-                      course.lessons.splice(pos,1);
-                      course.save();
+            this.showValidationErrors(req, res).then(data => {
+                this.model.Lesson.findById(req.params.id).populate('course').exec((err, lesson) => {
+                    if (err) return res.json({ data: 'Have Error', success: false });
+                    if (lesson) {
+                        let course = lesson.course;
+                        let pos = course.lessons.indexOf(lesson._id)
+                        course.lessons.splice(pos, 1);
+                        course.save();
                         lesson.remove();
-                        return res.json({data:'Success Remove Lesson',success:true}); 
+                        return res.json({ data: 'Success Remove Lesson', success: true });
                     }
                 });
 
                 //  this.model.Lesson.findByIdAndRemove(req.params.id,(err,lesson)=>{
-                  
+
                 //     if(err) return res.json({data:'Have Error' , success:false});
                 //     if(lesson){
                 //         let course = this.model.Course.findById(lesson.course);
                 //         course.lessons.forEach(lessonItem => {
-   
+
                 //             if(lessonItem._id==lesson._id) lessonItem.remove();
                 //         });
                 //        return res.json({data:'Success Remove Lesson',success:true}); 
@@ -102,8 +100,8 @@ class LessonController extends Controller {
                 //     return res.json({data:'Not Exist Lesson',success:false})
                 // })
 
-            }).catch(err=>{
-                if(err) throw new Error(err);
+            }).catch(err => {
+                if (err) throw new Error(err);
             });
 
         } catch (err) {

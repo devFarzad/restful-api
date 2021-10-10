@@ -24,6 +24,8 @@ const CourseValidator = require('../../validator/courseValidator');
 const LessonsValidator = require('../../validator/lessonValidator');
 const RegisterValidator = require('../../validator/registerValidator');
 const LoginValidator = require('../../validator/loginValidator');
+const apiAuth = require('../../middleware/apiAuth');
+const apiAdmin = require('../../middleware/apiAdmin');
 
 
 
@@ -50,9 +52,9 @@ check('id').isMongoId().withMessage('Id invalid !'),
 //Admin
 //admin Router
 const adminRouter = express.Router();
-adminRouter.get('/courses', ApiAuth.handle.bind(ApiAuth),adminCourseController.index.bind(adminCourseController));
+adminRouter.get('/courses',adminCourseController.index.bind(adminCourseController));
 adminRouter.get('/courses/:id', adminCourseController.single.bind(adminCourseController));
-adminRouter.post('/courses', ApiAuth.handle.bind(ApiAuth),CourseValidator.handle(), adminCourseController.store.bind(adminCourseController));
+adminRouter.post('/courses',CourseValidator.handle(), adminCourseController.store.bind(adminCourseController));
 adminRouter.put('/courses/:id', check('id').isMongoId().withMessage('Id invalid !'), adminCourseController.update.bind(adminCourseController));
 adminRouter.delete('/courses/:id', check('id').isMongoId().withMessage('Id invalid !'), adminCourseController.delete.bind(adminCourseController));
 
@@ -72,7 +74,7 @@ adminRouter.delete('/lessons/:id', check('id').isMongoId().withMessage('Id inval
 
 
 
-router.use('/admin', adminRouter);
+router.use('/admin', apiAuth.handle.bind(ApiAuth),apiAdmin,adminRouter);
 
 
 // router.get('/courses',(req,res)=>{

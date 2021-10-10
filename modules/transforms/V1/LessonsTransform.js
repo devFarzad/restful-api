@@ -14,6 +14,10 @@ module.exports = class LessonsTransform extends Transform {
         this.withCoursesStatus = true;
         return this;
     }
+     //Overide
+     CollactionName(){
+        return 'Lessons';
+    }
     showCourses(item) {
         // console.log(new CourseTransform().transform(item.course));
         if (this.withCoursesStatus) {
